@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "67898121193",
+    "project_id": "sparkadmin-e85bd",
+    "storage_bucket": "sparkadmin-e85bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67898121193:android:d36d75bec1f3f523c04978",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67898121193-bsp6nafvb53gelkmsbclk52tvsi5cqbu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_application_2",
+            "certificate_hash": "a5b40339f17bc01b5e95761b5950d7b2f152e397"
+          }
+        },
+        {
+          "client_id": "67898121193-4gq06ot09303emd1k4orlfsen85upig5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOIz0Xy_BkuDmhs1wPiqFQE2xEswVfNho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67898121193-4gq06ot09303emd1k4orlfsen85upig5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
