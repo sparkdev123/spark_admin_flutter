@@ -6,12 +6,20 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  // Initialize Firebase App Check
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity, // Play Integrity for Android
-    appleProvider: AppleProvider.deviceCheck, // DeviceCheck for iOS
-  );
+  //await Firebase.initializeApp();
+
+  try {
+    await Firebase.initializeApp();
+    print("Firebase vk initialized successfully!");
+    // Initialize Firebase App Check
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity, // Play Integrity for Android
+      appleProvider: AppleProvider.deviceCheck, // DeviceCheck for iOS
+    );
+  } catch (e) {
+    print("Firebase vk initialization error: $e");
+  }
+
   runApp(const MyApp());
 }
 

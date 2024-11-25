@@ -46,7 +46,12 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>Your app needs access to your location to show parking location.</string>
-
+	<string>Your app needs access to your location to show parking location.</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>GMSApiKey</key>
+	<string>AIzaSyBOIz0Xy_BkuDmhs1wPiqFQE2xEswVfNho</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to allow photo capture for user verification and app features.</string>
 </dict>
 </plist>
