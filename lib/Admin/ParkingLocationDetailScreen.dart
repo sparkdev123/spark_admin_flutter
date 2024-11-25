@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_application_2/Admin/BookingInformationScreen.dart';
 import 'package:flutter_application_2/Admin/UpdateParkingLocationScreen.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -155,6 +156,12 @@ class _ParkingLocationScreenState extends State<ParkingLocationDetailScreen> {
                       GestureDetector(
                         onTap: () {
                           // Handle booking information action here
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookingInformationScreen(),
+                            ),
+                          );
                         },
                         child: const Text(
                           "View Booking Information",
