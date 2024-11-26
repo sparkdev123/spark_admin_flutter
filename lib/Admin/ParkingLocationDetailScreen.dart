@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_2/Admin/BookingInformationScreen.dart';
 import 'package:flutter_application_2/Admin/UpdateParkingLocationScreen.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:dotted_border/dotted_border.dart'; // Import for Dotted Border
+import 'package:dotted_border/dotted_border.dart';
+
+import 'AdminParkingListPage.dart'; // Import for Dotted Border
 
 class ParkingLocationDetailScreen extends StatefulWidget {
 
@@ -294,6 +297,7 @@ class _ParkingLocationScreenState extends State<ParkingLocationDetailScreen> {
                           ),
                           onPressed: () {
                             // Handle delete action here
+                            deleteParkingData(phoneNumber,parkingId);
                           },
                         ),
                       ),
@@ -307,7 +311,61 @@ class _ParkingLocationScreenState extends State<ParkingLocationDetailScreen> {
       ),
     );
   }
+  //--delete parking data
+  Future<void> deleteParkingData(String mobileNumberID, String parkingDataDocID) async {
+    try {
+      _showLoadingDialog(context);
+      // Reference to the specific document
+      DocumentReference parkingDataDoc = FirebaseFirestore.instance
+          .collection('Admins')
+          .doc(mobileNumberID)
+          .collection('CreateAddParkingData')
+          .doc(parkingDataDocID);
 
+      // Delete the document
+      await parkingDataDoc.delete();
+
+      print("Parking data deleted successfully.");
+      // Ensure the loading dialog is closed
+      if (Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+      //--calling  prev screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>  AdminParkingListPage(phoneNumber: mobileNumberID ,)),
+      );
+
+    } catch (e) {
+      print("Error deleting parking data: $e");
+      // Ensure the loading dialog is closed
+      if (Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
+  }
+// Function to show the loading dialog
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent closing the dialog by tapping outside
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(), // The loading indicator
+                SizedBox(width: 20),
+                Text('Deleting Parking data Please wait...'), // Optional loading text
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
   // Widget for displaying parking space details with icon, label, and count
   Widget _parkingSpaceDetailRow({
     required IconData icon,
