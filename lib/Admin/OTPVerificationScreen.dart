@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
@@ -48,11 +49,14 @@ class OTPForm extends StatefulWidget {
 }
 
 class _OTPFormState extends State<OTPForm> {
-  final TextEditingController _otpController = TextEditingController();
   int _counter = 30;
   bool _resendEnabled = false;
   late String phoneNumberId;
-
+// List of TextEditingControllers for each TextField
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+        (index) => TextEditingController(),
+  );
   @override
   void initState() {
     super.initState();
@@ -75,6 +79,19 @@ class _OTPFormState extends State<OTPForm> {
         timer.cancel();
       }
     });
+  }
+  @override
+  void dispose() {
+    // Dispose controllers to avoid memory leaks
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  // Function to get the OTP value
+  String _getOTPValue() {
+    return _controllers.map((controller) => controller.text).join();
   }
 
   @override
@@ -131,6 +148,8 @@ class _OTPFormState extends State<OTPForm> {
                     return SizedBox(
                       width: 40,
                       child: TextField(
+                        controller: _controllers[index], // Assign controller
+
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -162,10 +181,11 @@ class _OTPFormState extends State<OTPForm> {
                 ElevatedButton(
                   onPressed: () {
                     // Action for verifying OTP
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) =>  AdminParkingListPage(phoneNumber: phoneNumberId)),
-                    );
+                    verifyOtp();
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) =>  AdminParkingListPage(phoneNumber: phoneNumberId)),
+                    // );
 
                   },
                   style: ElevatedButton.styleFrom(
@@ -187,35 +207,80 @@ class _OTPFormState extends State<OTPForm> {
       ],
     );
   }
-  Future<void> verifyOtp() async {
-    String phoneNumber = phoneNumberId;
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent closing the dialog by tapping outside
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(), // The loading indicator
+                SizedBox(width: 20),
+                Text('Verifying  otp  Please wait...'), // Optional loading text
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
+  Future<void> verifyOtp() async {
+    _showLoadingDialog(context);
+    String phoneNumber = phoneNumberId;
+    // Get the OTP value
+    final enteredOtp = _getOTPValue();
+    print("Entered OTP: $enteredOtp");
     // Format phone number in E.164 format
     var url = Uri.parse(
-        'https://38c6-117-200-14-101.ngrok-free.app/verify-code');
+        'https://spark-node.onrender.com/verify-code');
 
     Map<String, String> headers = {'Content-Type': 'application/json'};
 // final msg = jsonEncode({"grant_type":"password","username":"******","password":"*****","scope":"offline_access"});
-    final msg = json.encode({"phoneNumber": phoneNumber,"code":78777});
+    final msg = json.encode({"phoneNumber": phoneNumber,"code":enteredOtp});
     var response = await http.post(url, headers: headers, body: msg);
     print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
       setState(() {
-        print('Otp sent  successfully : ${response.body}');
+        Fluttertoast.showToast(
+          msg: "otp verified  Successfully...",
+          toastLength: Toast.LENGTH_SHORT, // Duration: SHORT or LONG
+          gravity: ToastGravity.BOTTOM,    // Position: TOP, CENTER, or BOTTOM
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+
+        print('Otp verified  successfully : ${response.body}');
         // _data = 'Data created successfully : ${response.body}';
-        //--Navigate to OTP screen
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => OTPVerificationScreen(
-        //       phoneNumber: formattedPhoneNumber,
-        //       verificationId: _verificationId,
-        //     ),
-        //   ),
-        // );
+        if (Navigator.of(context, rootNavigator: true).canPop()) {
+          Navigator.of(context, rootNavigator: true).pop();
+        }
+        //--Navigate to admin parking list screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>  AdminParkingListPage(phoneNumber: phoneNumberId)),
+        );
       });
     } else {
       print('Failed tp fetch data');
+      // Ensure the loading dialog is closed
+      // Ensure the loading dialog is closed
+      if (Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+      Fluttertoast.showToast(
+        msg: "otp verified  failed  please try again",
+        toastLength: Toast.LENGTH_SHORT, // Duration: SHORT or LONG
+        gravity: ToastGravity.BOTTOM,    // Position: TOP, CENTER, or BOTTOM
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       setState(() {
         //_data = 'Failed to create data';
         print('Failed to send Otp');

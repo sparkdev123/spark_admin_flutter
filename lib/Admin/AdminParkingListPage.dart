@@ -37,6 +37,7 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
   int _currentIndex = 0; // For keeping track of the current image index
 
   Future<void> fetchDataFromFirestoreCreateAddParkingData() async {
+    print("phonenumberId in admin parking  List screen=="+phoneNumberId);
     _showLoadingDialog(context);
 // Reference to the user's parkingData subcollection
     CollectionReference collectionRef = FirebaseFirestore.instance

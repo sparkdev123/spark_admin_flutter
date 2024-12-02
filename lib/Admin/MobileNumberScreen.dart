@@ -6,6 +6,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'OTPVerificationScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MobileNumberScreen extends StatefulWidget {
   const MobileNumberScreen({super.key});
@@ -81,13 +82,36 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
       },
     );
   }
+  // Function to show the loading dialog
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent closing the dialog by tapping outside
+      builder: (BuildContext context) {
+        return const Dialog(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(), // The loading indicator
+                SizedBox(width: 20),
+                Text('Sending otp  Please wait...'), // Optional loading text
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
   Future<void> sendOtp() async {
+    _showLoadingDialog(context);
     String phoneNumber = _phoneController.text.trim();
 
     // Format phone number in E.164 format
     String formattedPhoneNumber = _countryCode + phoneNumber;
     var url = Uri.parse(
-        'https://38c6-117-200-14-101.ngrok-free.app/send-verification');
+        'https://spark-node.onrender.com/send-verification');
 
     Map<String, String> headers = {'Content-Type': 'application/json'};
 // final msg = jsonEncode({"grant_type":"password","username":"******","password":"*****","scope":"offline_access"});
@@ -108,9 +132,24 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
             ),
           ),
         );
+        // // Ensure the loading dialog is closed
+        // if (Navigator.of(context, rootNavigator: true).canPop()) {
+        //   Navigator.of(context, rootNavigator: true).pop();
+        // }
       });
     } else {
       print('Failed tp fetch data');
+      // Ensure the loading dialog is closed
+      Navigator.pop(context);
+
+      Fluttertoast.showToast(
+        msg: "Failed to send otp please try again",
+        toastLength: Toast.LENGTH_SHORT, // Duration: SHORT or LONG
+        gravity: ToastGravity.BOTTOM,    // Position: TOP, CENTER, or BOTTOM
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       setState(() {
         //_data = 'Failed to create data';
         print('Failed to send Otp');
@@ -248,17 +287,17 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                   Center(
                     child: ElevatedButton(
                       onPressed:(){
-                        //sendOtp();
+                        sendOtp();
                         //--Navigate to OTP screen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OTPVerificationScreen(
-                              phoneNumber: _phoneController.text,
-                              verificationId: _verificationId,
-                            ),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => OTPVerificationScreen(
+                        //       phoneNumber: _phoneController.text,
+                        //       verificationId: _verificationId,
+                        //     ),
+                        //   ),
+                        // );
                       } ,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
