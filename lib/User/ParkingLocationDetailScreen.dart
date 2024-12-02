@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_application_2/Admin/BookingInformationScreen.dart';
-import 'package:flutter_application_2/Admin/UpdateParkingLocationScreen.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:dotted_border/dotted_border.dart';
 
-import 'AdminParkingListPage.dart'; // Import for Dotted Border
+import 'AdminParkingListPage.dart';
+import 'BookingInformationScreen.dart';
+import 'UpdateParkingLocationScreen.dart'; // Import for Dotted Border
 
 class ParkingLocationDetailScreen extends StatefulWidget {
 

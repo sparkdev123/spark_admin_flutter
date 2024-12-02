@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Admin/MapScreen.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:open_filex/open_filex.dart';
 
 import 'AdminParkingListPage.dart';
+import 'MapScreen.dart';
 
 class CreateParkingLocationScreen extends StatefulWidget {
   late String phoneNumber;

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_2/User/UserMainScreen.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
@@ -164,7 +165,7 @@ class _OTPFormState extends State<OTPForm> {
                     // Action for verifying OTP
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>  AdminParkingListPage(phoneNumber: phoneNumberId)),
+                      MaterialPageRoute(builder: (context) =>  Usermainscreen()),
                     );
 
                   },

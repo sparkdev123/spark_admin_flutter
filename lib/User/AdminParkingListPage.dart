@@ -1,10 +1,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Admin/CreateParkingLocationScreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_application_2/Admin/ParkingLocationDetailScreen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'CreateParkingLocationScreen.dart';
+import 'ParkingLocationDetailScreen.dart';
 
 class AdminParkingListPage extends StatelessWidget {
   late String phoneNumber;
