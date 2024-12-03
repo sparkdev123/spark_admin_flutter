@@ -149,7 +149,6 @@ class _OTPFormState extends State<OTPForm> {
                       width: 40,
                       child: TextField(
                         controller: _controllers[index], // Assign controller
-
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -163,6 +162,8 @@ class _OTPFormState extends State<OTPForm> {
                         onChanged: (value) {
                           if (value.length == 1 && index < 5) {
                             FocusScope.of(context).nextFocus();
+                          } else if (value.isEmpty && index > 0) {
+                            FocusScope.of(context).previousFocus(); // Move focus to previous field
                           }
                         },
                         textAlign: TextAlign.center,
@@ -172,6 +173,7 @@ class _OTPFormState extends State<OTPForm> {
                     );
                   }),
                 ),
+
                 const SizedBox(height: 16),
                 // const Text(
                 //   'OTP not received?',

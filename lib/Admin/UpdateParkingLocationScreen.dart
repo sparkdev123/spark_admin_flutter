@@ -261,12 +261,16 @@ class _UpdateParkingLocationScreenState extends State<UpdateParkingLocationScree
   // Function to pick an image from camera or gallery
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
+   // parkingFileImages.clear();
     if (pickedFile != null) {
       setState(() {
         parkingFileImages.add(File(pickedFile.path));
       });
     }
-    imgListCombined.addAll(parkingFileImages);
+    if(parkingFileImages.isNotEmpty){
+      imgListCombined.add(parkingFileImages[parkingFileImages.length-1]);
+
+    }
   }
 
   // Function to pick a document (any type)
@@ -281,7 +285,10 @@ class _UpdateParkingLocationScreenState extends State<UpdateParkingLocationScree
       setState(() {
         documentsFileList.add(file);
       });
-      documentsListCombined.addAll(documentsFileList);
+      if(documentsFileList.isNotEmpty){
+        documentsListCombined.add(documentsFileList[documentsFileList.length-1]);
+
+      }
     }
 
   }
