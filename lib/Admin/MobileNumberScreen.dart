@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'AdminSignUpScreen.dart';
 import 'OTPVerificationScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
@@ -23,65 +24,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
   // Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Method to add data to Firestore
-  Future<void> addData() async {
-    // Add a new document with auto-generated ID
-    await _firestore.collection('users').add({
-      'name': 'John Doe',
-      'email': 'johndoe@example.com',
-      'status':'Active',
-      'created_at': FieldValue.serverTimestamp(),
-    });
-    print('Data added successfully!');
-  }
-  Future<void> getData() async {
-    // Retrieve all documents from the 'users' collection
-    QuerySnapshot querySnapshot = await _firestore.collection('users').get();
 
-    // Iterate over each document and print the data
-    for (var doc in querySnapshot.docs) {
-      print(doc.data());
-    }
-  }
-  // Send OTP function
-  void _sendOTP() async {
-    String phoneNumber = _phoneController.text.trim();
-
-    // Format phone number in E.164 format
-    String formattedPhoneNumber = _countryCode + phoneNumber;
-
-    await _auth.verifyPhoneNumber(
-      phoneNumber: formattedPhoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) {
-        // Handle when OTP is auto-retrieved
-        print('verificationCompleted : $credential');
-
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        print('Verification failed: ${e.message}');
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        setState(() {
-          _verificationId = verificationId;
-        });
-        // Navigate to OTP screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OTPVerificationScreen(
-              phoneNumber: formattedPhoneNumber,
-              verificationId: _verificationId,
-            ),
-          ),
-        );
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        setState(() {
-          _verificationId = verificationId;
-        });
-      },
-    );
-  }
   // Function to show the loading dialog
   void _showLoadingDialog(BuildContext context) {
     showDialog(
@@ -288,16 +231,6 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                     child: ElevatedButton(
                       onPressed:(){
                         sendOtp();
-                        //--Navigate to OTP screen
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => OTPVerificationScreen(
-                        //       phoneNumber: _phoneController.text,
-                        //       verificationId: _verificationId,
-                        //     ),
-                        //   ),
-                        // );
                       } ,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

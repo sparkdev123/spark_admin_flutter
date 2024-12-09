@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/Admin/CreateParkingLocationScreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_2/Admin/ParkingLocationDetailScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'MobileNumberScreen.dart';
 
 class AdminParkingListPage extends StatelessWidget {
   late String phoneNumber;
@@ -22,7 +25,8 @@ class AdminParkingListPage extends StatelessWidget {
 class ParkingListScreen extends StatefulWidget {
   String phoneNumber;
 
-   ParkingListScreen({super.key,required this.phoneNumber});
+
+  ParkingListScreen({super.key,required this.phoneNumber});
 
   @override
   _ParkingListScreenState createState() => _ParkingListScreenState(phoneNumberId: phoneNumber);
@@ -30,6 +34,11 @@ class ParkingListScreen extends StatefulWidget {
 
 class _ParkingListScreenState extends State<ParkingListScreen> {
   late String phoneNumberId;
+  late String displayName="";
+  late String emailId="";
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   _ParkingListScreenState({required this.phoneNumberId
 
   });
@@ -75,6 +84,41 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
     }
   }
 
+  //--fetching signuptable data
+  Future<void> fetchAdminSignUpData() async {
+    try {
+      // Reference to the specific document using the phone number as the document ID
+      DocumentSnapshot document = await FirebaseFirestore.instance
+          .collection('AdminSigUpTable')
+          .doc(phoneNumberId)
+          .get();
+
+      // Check if the document exists
+      if (document.exists) {
+        // Retrieve data from the document
+        Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+        // Access individual fields
+        String email = data['email'] ?? '';
+        String phone = data['phoneNumber'] ?? '';
+        String name = data['displayName'] ?? '';
+
+        // Print or use the retrieved data
+        print('Email: $email');
+        print('Phone Number: $phone');
+        print('Display Name: $name');
+        setState(() {
+          displayName=name;
+          emailId=email;
+        });
+      } else {
+        print('Document does not exist.');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
 // Function to show the loading dialog
   void _showLoadingDialog(BuildContext context) {
     showDialog(
@@ -110,19 +154,22 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
     phoneNumberId=widget.phoneNumber;
     // Use WidgetsBinding to call the fetching function after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchAdminSignUpData();
       fetchDataFromFirestoreCreateAddParkingData();
     });   // Fetch data when widget is initialized
+
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: const Row(
+        title:  Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Hi, Vivek',
+              'Hi,$displayName',
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
             CircleAvatar(
@@ -136,7 +183,65 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
           icon: const Icon(Icons.menu),
           onPressed: () {
             // Action for drawer or menu
+            // Open the drawer
+            // Use the GlobalKey to open the drawer
+            _scaffoldKey.currentState?.openDrawer();
           },
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // Drawer Header
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/images/parkingCarLogo.png'), // Replace with your image
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "$displayName",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  Text(
+                    "$emailId",
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            // Menu Items
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Profile'),
+              onTap: () {
+                // Navigate or perform any action
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: () {
+                logout(context);
+               // Navigator.pop(context);
+              },
+            ),
+          ],
         ),
       ),
       body: Column(
@@ -307,4 +412,14 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
       ),
     );
   }
+  Future<void> logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('phoneNumber'); // Remove phone number
+    print('User logged out!');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MobileNumberScreen()),
+    );
+  }
+
 }

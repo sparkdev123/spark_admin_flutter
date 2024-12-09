@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_2/Admin/AdminSignUpScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -184,10 +185,7 @@ class _OTPFormState extends State<OTPForm> {
                   onPressed: () {
                     // Action for verifying OTP
                     verifyOtp();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) =>  AdminParkingListPage(phoneNumber: phoneNumberId)),
-                    // );
+
 
                   },
                   style: ElevatedButton.styleFrom(
@@ -265,7 +263,7 @@ class _OTPFormState extends State<OTPForm> {
         //--Navigate to admin parking list screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>  AdminParkingListPage(phoneNumber: phoneNumberId)),
+          MaterialPageRoute(builder: (context) =>  AdminSignUpScreen(phoneNumber: phoneNumberId)),
         );
       });
     } else {

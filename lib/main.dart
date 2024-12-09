@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Admin/AdminParkingListPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Admin/MobileNumberScreen.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -19,12 +21,15 @@ void main() async {
   } catch (e) {
     print("Firebase vk initialization error: $e");
   }
-
-  runApp(const MyApp());
+  final prefs = await SharedPreferences.getInstance();
+  final String? phoneNumberId = prefs.getString('phoneNumber');
+  runApp( MyApp(phoneNumber: phoneNumberId));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? phoneNumber;
+
+  const MyApp({super.key, required this.phoneNumber});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +38,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MobileNumberScreen(),
+      home:  phoneNumber != null ? AdminParkingListPage(phoneNumber: phoneNumber!) : const MobileNumberScreen(),
     );
   }
 }
