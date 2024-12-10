@@ -376,7 +376,7 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
                                       const Icon(Icons.local_parking, color: Colors.orange, size: 16),
                                       const SizedBox(width: 4),
                                       Text(
-                                          '${0}/${(int.parse(parkingData['bikeSlot']) + int.parse(parkingData['carSlot']))} Slots'),
+                                          '${0}/${(int.tryParse(parkingData['bikeSlot']?? "0")?? 0 + (int.tryParse(parkingData['carSlot'] ?? "0") ?? 0))} Slots'),
                                       const SizedBox(width: 16),
                                       const Icon(Icons.check_circle, color: Colors.orange, size: 16),
                                       const SizedBox(width: 4),
