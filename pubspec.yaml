@@ -55,10 +55,15 @@ dependencies:
   photo_view: ^0.15.0
   dotted_border: ^2.1.0
   url_launcher: ^6.3.1
+  fluttertoast: ^8.2.1
+  shared_preferences: ^2.1.1
+  flutter_paypal_payment: ^1.0.7
+
 
 
 
   http: any
+  intl: ^0.20.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
