@@ -44,6 +44,7 @@ dependencies:
   geolocator: ^9.0.2  # For getting the current location
   google_maps_flutter: ^2.2.0  # For displaying Google Maps
   google_place: 0.4.7  # For place search functionality
+  google_places_flutter: ^2.0.9
   geocoding: ^2.0.4   # or the latest version
   firebase_auth: ^5.3.0
   firebase_core: ^3.5.0
@@ -57,7 +58,7 @@ dependencies:
   url_launcher: ^6.3.1
   fluttertoast: ^8.2.1
   shared_preferences: ^2.1.1
-
+  datepicker_dropdown: ^0.1.6
 
 
 

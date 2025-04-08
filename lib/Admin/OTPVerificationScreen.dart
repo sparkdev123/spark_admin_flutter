@@ -9,10 +9,10 @@ import 'package:http/http.dart' as http;
 
 import 'AdminParkingListPage.dart';
 
-
 class OTPVerificationScreen extends StatelessWidget {
   late String phoneNumber;
-   OTPVerificationScreen({super.key, required this.phoneNumber, required String verificationId});
+  OTPVerificationScreen(
+      {super.key, required this.phoneNumber, required String verificationId});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class OTPVerificationScreen extends StatelessWidget {
           elevation: 0,
         ),
         backgroundColor: Colors.green,
-        body:  OTPForm(phoneNumber: phoneNumber),
+        body: OTPForm(phoneNumber: phoneNumber),
       ),
     );
   }
@@ -40,10 +40,7 @@ class OTPVerificationScreen extends StatelessWidget {
 class OTPForm extends StatefulWidget {
   String phoneNumber;
 
-   OTPForm({super.key,
-  required this.phoneNumber
-
-  });
+  OTPForm({super.key, required this.phoneNumber});
 
   @override
   _OTPFormState createState() => _OTPFormState();
@@ -56,12 +53,12 @@ class _OTPFormState extends State<OTPForm> {
 // List of TextEditingControllers for each TextField
   final List<TextEditingController> _controllers = List.generate(
     6,
-        (index) => TextEditingController(),
+    (index) => TextEditingController(),
   );
   @override
   void initState() {
     super.initState();
-    phoneNumberId=widget.phoneNumber;
+    phoneNumberId = widget.phoneNumber;
     _startResendTimer();
   }
 
@@ -81,6 +78,7 @@ class _OTPFormState extends State<OTPForm> {
       }
     });
   }
+
   @override
   void dispose() {
     // Dispose controllers to avoid memory leaks
@@ -130,7 +128,7 @@ class _OTPFormState extends State<OTPForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Text(
+                    Text(
                       phoneNumberId,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
@@ -164,7 +162,8 @@ class _OTPFormState extends State<OTPForm> {
                           if (value.length == 1 && index < 5) {
                             FocusScope.of(context).nextFocus();
                           } else if (value.isEmpty && index > 0) {
-                            FocusScope.of(context).previousFocus(); // Move focus to previous field
+                            FocusScope.of(context)
+                                .previousFocus(); // Move focus to previous field
                           }
                         },
                         textAlign: TextAlign.center,
@@ -185,12 +184,11 @@ class _OTPFormState extends State<OTPForm> {
                   onPressed: () {
                     // Action for verifying OTP
                     verifyOtp();
-
-
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 100),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 14, horizontal: 100),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -207,10 +205,12 @@ class _OTPFormState extends State<OTPForm> {
       ],
     );
   }
+
   void _showLoadingDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent closing the dialog by tapping outside
+      barrierDismissible:
+          false, // Prevent closing the dialog by tapping outside
       builder: (BuildContext context) {
         return const Dialog(
           child: Padding(
@@ -236,12 +236,11 @@ class _OTPFormState extends State<OTPForm> {
     final enteredOtp = _getOTPValue();
     print("Entered OTP: $enteredOtp");
     // Format phone number in E.164 format
-    var url = Uri.parse(
-        'https://spark-node.onrender.com/verify-code');
+    var url = Uri.parse('https://spark-node.onrender.com/verify-code');
 
     Map<String, String> headers = {'Content-Type': 'application/json'};
 // final msg = jsonEncode({"grant_type":"password","username":"******","password":"*****","scope":"offline_access"});
-    final msg = json.encode({"phoneNumber": phoneNumber,"code":enteredOtp});
+    final msg = json.encode({"phoneNumber": phoneNumber, "code": enteredOtp});
     var response = await http.post(url, headers: headers, body: msg);
     print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -249,7 +248,7 @@ class _OTPFormState extends State<OTPForm> {
         Fluttertoast.showToast(
           msg: "otp verified  Successfully...",
           toastLength: Toast.LENGTH_SHORT, // Duration: SHORT or LONG
-          gravity: ToastGravity.BOTTOM,    // Position: TOP, CENTER, or BOTTOM
+          gravity: ToastGravity.BOTTOM, // Position: TOP, CENTER, or BOTTOM
           backgroundColor: Colors.black,
           textColor: Colors.white,
           fontSize: 16.0,
@@ -263,7 +262,9 @@ class _OTPFormState extends State<OTPForm> {
         //--Navigate to admin parking list screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>  AdminSignUpScreen(phoneNumber: phoneNumberId)),
+          MaterialPageRoute(
+              builder: (context) =>
+                  AdminSignUpScreen(phoneNumber: phoneNumberId)),
         );
       });
     } else {
@@ -276,7 +277,7 @@ class _OTPFormState extends State<OTPForm> {
       Fluttertoast.showToast(
         msg: "otp verified  failed  please try again",
         toastLength: Toast.LENGTH_SHORT, // Duration: SHORT or LONG
-        gravity: ToastGravity.BOTTOM,    // Position: TOP, CENTER, or BOTTOM
+        gravity: ToastGravity.BOTTOM, // Position: TOP, CENTER, or BOTTOM
         backgroundColor: Colors.black,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -284,9 +285,7 @@ class _OTPFormState extends State<OTPForm> {
       setState(() {
         //_data = 'Failed to create data';
         print('Failed to send Otp');
-
       });
     }
   }
-
 }

@@ -317,10 +317,9 @@ class _ParkingLocationScreenState extends State<ParkingLocationDetailScreen> {
       _showLoadingDialog(context);
       // Reference to the specific document
       DocumentReference parkingDataDoc = FirebaseFirestore.instance
-          .collection('Admins')
-          .doc(mobileNumberID)
           .collection('CreateAddParkingData')
-          .doc(parkingDataDocID);
+          .doc(parkingId);
+        
 
       // Delete the document
       await parkingDataDoc.delete();

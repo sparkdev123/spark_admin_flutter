@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:open_filex/open_filex.dart';
-
+import 'Global/GlobalCardWidget.dart';
 import 'AdminParkingListPage.dart';
 
 class CreateParkingLocationScreen extends StatefulWidget {
@@ -132,9 +132,9 @@ class _CreateParkingLocationScreenState extends State<CreateParkingLocationScree
       }
     }
 // Reference to the user's main document
-    DocumentReference userDoc = _firestore.collection('Admins').doc(phoneNumber);
-    await userDoc.collection('CreateAddParkingData').add({
-      'parkingName': parkingName,
+await FirebaseFirestore.instance
+            .collection('CreateAddParkingData').add({
+                'parkingName': parkingName,
       'bikeSlot': bikeSlot,
       'bikeSlotPerHour':bikeSlotPerHour,
       'carSlot': carSlot,
@@ -150,7 +150,9 @@ class _CreateParkingLocationScreenState extends State<CreateParkingLocationScree
       'addressLocationLattitude':addressLocationLattitude,
       'addressLocationLongitude':addressLocationLongitude,
       'created_at': FieldValue.serverTimestamp(),
-    });
+            });
+          
+
     print('Data added successfully!');
     //---closing showDialog box
     if (Navigator.of(buildcontext, rootNavigator: true).canPop()) {
@@ -661,29 +663,6 @@ class PDFViewerScreen extends StatelessWidget {
       ),
       body: PDFView(
         filePath: filePath,
-      ),
-    );
-  }
-}
-
-// Reusable widget for Parking Space input fields
-class ParkingSpaceField extends StatelessWidget {
-  final String label;
-  final IconData? icon;
-  final TextEditingController? textEditingController;
-
-
-  const ParkingSpaceField({super.key, required this.label, this.icon,this.textEditingController});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: textEditingController,
-      keyboardType: TextInputType.number,  // Set number input type
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: icon != null ? Icon(icon) : null,
-        border: const OutlineInputBorder(),
       ),
     );
   }

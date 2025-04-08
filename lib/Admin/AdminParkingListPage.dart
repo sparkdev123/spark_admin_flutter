@@ -1,9 +1,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Admin/AccountScreen.dart';
 import 'package:flutter_application_2/Admin/CreateParkingLocationScreen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_2/Admin/ParkingLocationDetailScreen.dart';
+import 'package:flutter_application_2/Admin/SettingsScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -49,14 +51,18 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
     print("phonenumberId in admin parking  List screen=="+phoneNumberId);
     _showLoadingDialog(context);
 // Reference to the user's parkingData subcollection
-    CollectionReference collectionRef = FirebaseFirestore.instance
-        .collection('Admins')
-        .doc(phoneNumberId)
-        .collection('CreateAddParkingData');
-   // CollectionReference collectionRef = FirebaseFirestore.instance.collection('CreateAddParkingData');
+    // CollectionReference collectionRef = FirebaseFirestore.instance
+    //     .collection('Admins')
+    //     .doc(phoneNumberId)
+    //     .collection('CreateAddParkingData');
+   CollectionReference collectionRef = FirebaseFirestore.instance.collection('CreateAddParkingData');
+   
 
     try {
       QuerySnapshot querySnapshot = await collectionRef.get();
+        DocumentSnapshot doc = await collectionRef.doc(phoneNumberId).get();
+    // Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
 
       // Storing document id as the key and the document data as the value
       List<Map<String, dynamic>> tempList = querySnapshot.docs.map((doc) {
@@ -178,16 +184,17 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
             )
           ],
         ),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            // Action for drawer or menu
-            // Open the drawer
-            // Use the GlobalKey to open the drawer
-            _scaffoldKey.currentState?.openDrawer();
-          },
-        ),
+        automaticallyImplyLeading: true, // Shows back arrow
+        // elevation: 0,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.menu),
+        //   onPressed: () {
+        //     // Action for drawer or menu
+        //     // Open the drawer
+        //     // Use the GlobalKey to open the drawer
+        //     _scaffoldKey.currentState?.openDrawer();
+        //   },
+        // ),
       ),
       drawer: Drawer(
         child: ListView(
@@ -225,12 +232,31 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
                 // Navigate or perform any action
                 Navigator.pop(context);
               },
+            ),   ListTile(
+              leading: Icon(Icons.account_balance),
+              title: Text('Account'),
+              onTap: () {
+                // Navigate or perform any action
+                // Navigator.pop(context);
+                //  Navigator.pop(context);
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => AccountScreen(phoneNumber: phoneNumberId)));
+
+                   Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AccountScreen(phoneNumber: phoneNumberId))
+                      );
+              },
             ),
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
               onTap: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                // LocationAutocompleteScreen
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LocationAutocompleteScreen())
+                      );
               },
             ),
             ListTile(
@@ -422,4 +448,10 @@ class _ParkingListScreenState extends State<ParkingListScreen> {
     );
   }
 
+  Future<void> accountScreen(BuildContext context) async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => AccountScreen(phoneNumber: phoneNumberId)),
+    );
+  }
 }

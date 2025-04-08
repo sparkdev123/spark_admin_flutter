@@ -23,6 +23,7 @@ void main() async {
   }
   final prefs = await SharedPreferences.getInstance();
   final String? phoneNumberId = prefs.getString('phoneNumber');
+  print('rere$phoneNumberId');
   runApp( MyApp(phoneNumber: phoneNumberId));
 }
 

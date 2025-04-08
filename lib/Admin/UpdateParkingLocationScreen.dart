@@ -204,8 +204,6 @@ class _UpdateParkingLocationScreenState extends State<UpdateParkingLocationScree
     print('Document URLs: $documentsUrls');
     // Firestore document reference
     DocumentReference documentReference = FirebaseFirestore.instance
-        .collection('Admins')
-        .doc(phoneNumberId)
         .collection('CreateAddParkingData')
         .doc(parkingId);  // Replace with your actual document ID
 

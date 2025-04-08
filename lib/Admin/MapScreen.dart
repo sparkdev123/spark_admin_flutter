@@ -33,7 +33,9 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     _setCustomMarkers();
-    _googlePlace = GooglePlace("AIzaSyBOIz0Xy_BkuDmhs1wPiqFQE2xEswVfNho"); // Initialize Google Place (replace with your Google API key)
+    // AIzaSyCH5N1QmAM-J25YhyML6ZRpOSGxixdLG-0
+    // _googlePlace = GooglePlace("AIzaSyBOIz0Xy_BkuDmhs1wPiqFQE2xEswVfNho"); // Initialize Google Place (replace with your Google API key)
+     _googlePlace = GooglePlace("AIzaSyBOIz0Xy_BkuDmhs1wPiqFQE2xEswVfNho");
     var latitude=widget.locationlatitude;
     var longitude=widget.locationlongitude;
     _getLocation(latitude,longitude);

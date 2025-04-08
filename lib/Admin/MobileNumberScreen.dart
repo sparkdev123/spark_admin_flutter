@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flutter_application_2/Admin/AdminParkingListPage.dart';
 import 'AdminSignUpScreen.dart';
 import 'OTPVerificationScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,12 +25,12 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
   // Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
   // Function to show the loading dialog
   void _showLoadingDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent closing the dialog by tapping outside
+      barrierDismissible:
+          false, // Prevent closing the dialog by tapping outside
       builder: (BuildContext context) {
         return const Dialog(
           child: Padding(
@@ -47,14 +48,23 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
       },
     );
   }
+
   Future<void> sendOtp() async {
+// setState(() {
+//     Navigator.push(
+//           context,
+//           MaterialPageRoute(
+//               builder: (context) =>
+//                   AdminParkingListPage(phoneNumber: '8885124727')),
+//         );
+// });
+
     _showLoadingDialog(context);
     String phoneNumber = _phoneController.text.trim();
 
     // Format phone number in E.164 format
     String formattedPhoneNumber = _countryCode + phoneNumber;
-    var url = Uri.parse(
-        'https://spark-node.onrender.com/send-verification');
+    var url = Uri.parse('https://spark-node.onrender.com/send-verification');
 
     Map<String, String> headers = {'Content-Type': 'application/json'};
 // final msg = jsonEncode({"grant_type":"password","username":"******","password":"*****","scope":"offline_access"});
@@ -64,7 +74,8 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       setState(() {
         print('Otp sent  successfully : ${response.body}');
-       // _data = 'Data created successfully : ${response.body}';
+         Navigator.pop(context);
+        // _data = 'Data created successfully : ${response.body}';
         //--Navigate to OTP screen
         Navigator.push(
           context,
@@ -88,7 +99,7 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
       Fluttertoast.showToast(
         msg: "Failed to send otp please try again",
         toastLength: Toast.LENGTH_SHORT, // Duration: SHORT or LONG
-        gravity: ToastGravity.BOTTOM,    // Position: TOP, CENTER, or BOTTOM
+        gravity: ToastGravity.BOTTOM, // Position: TOP, CENTER, or BOTTOM
         backgroundColor: Colors.black,
         textColor: Colors.white,
         fontSize: 16.0,
@@ -96,11 +107,9 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
       setState(() {
         //_data = 'Failed to create data';
         print('Failed to send Otp');
-
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -163,34 +172,52 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Welcome to Parking',
+                    'Welcome to Owner Parking',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Mobile Verification',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(height: 30),
+                  Container(
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Mobile Verification',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                              alignment: Alignment.center,
+                              padding:
+                                  const EdgeInsets.only(left: 50, right: 50),
+                              child: const Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'We need to text you the OTP to authenticate your account',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 16),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              )),
+                        ],
+                      ),
                     ),
                   ),
-                  const Text(
-                    'We need to text you the OTP to authenticate your account',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
                   const Text(
                     'Enter Mobile Number',
                     style: TextStyle(
                       color: Colors.black54,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -229,11 +256,12 @@ class _MobileNumberScreenState extends State<MobileNumberScreen> {
                   const SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
-                      onPressed:(){
+                      onPressed: () {
                         sendOtp();
-                      } ,
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),

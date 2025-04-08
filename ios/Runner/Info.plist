@@ -53,5 +53,7 @@
 	<string>AIzaSyBOIz0Xy_BkuDmhs1wPiqFQE2xEswVfNho</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to allow photo capture for user verification and app features.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Library Access Warning</string>
 </dict>
 </plist>
